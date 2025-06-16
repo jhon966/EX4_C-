@@ -1,4 +1,6 @@
 #pragma once
+#include <iterator>
+#include <ostream>
 #include <stdexcept>
 #include <iostream>
 
@@ -39,6 +41,7 @@ public:
             size++; // increase the size by one
         }
     }
+
     // func that give us the size of our container 
     // *please note that size isnt the same as capacity, size is only the num of elemts that we add to our container*
     size_t getsize() const {
@@ -66,4 +69,18 @@ public:
         }
         this->size--;// we need to reduce the size by one for every delete  
     }
+    void print(std::ostream& os) const{ // print the container
+        os<<"[ ";
+        for(size_t i=0; i<this->size; i++){
+            os<<data[i]<<" ";
+    }
+    os<< "]"<<std::endl; // Going down a row for more readability
+    }
 };
+
+ //   operator that print the container
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os,const Mycontainer<T>& cont){
+        cont.print(os); // the operator call to print 
+        return os;
+    }
