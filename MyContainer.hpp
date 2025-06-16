@@ -11,6 +11,7 @@ private:
     size_t capacity; // Capacity of the container
     Mycontainer<T>* cont_sorthHtoL=nullptr; // container that already sort hige to low for the iterator
     Mycontainer<T>* cont_sortLtoH=nullptr; // container that already sort low to hige for the iterator
+    Mycontainer<T>*cont_SideCross=nullptr; // container that already sort in SideCrossOrder for the iterator
 public:
 
     // Constructor to initialize the container with a given capacity
@@ -49,7 +50,24 @@ Mycontainer(const Mycontainer<T>& other) {
         }
         return *this;
     }
-
+    // sort same as sortside
+Mycontainer<T> sortside(){
+    Mycontainer<T> sorted(*this);// use deep copy
+    if(cont_sorthHtoL==nullptr){
+        cont_sorthHtoL=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
+    }
+    if(cont_sortLtoH==nullptr){
+        cont_sortLtoH =new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
+    } 
+    int i=0;
+    for(int i=0; i<size; i+=2){
+       sorted.data[i]=cont_sortLtoH->data[i/2];
+       if( (i+1)<=size-1 ){
+       sorted.data[i+1]=cont_sorthHtoL->data[i/2];
+       }
+}
+return sorted;
+}
 Mycontainer<T> sortHtoL(){
     Mycontainer<T> sorted(*this);// use deep copy
     T higest;
@@ -174,6 +192,26 @@ T* DescendingOrder_end(){
      }
     return cont_sortLtoH->data + cont_sortLtoH->size; // we add the size to reach the end
 }
+// return the beging of the iterator
+T* SideCrossOrder_begin(){ 
+    if(cont_SideCross==nullptr){// need to free before
+        //delete cont_sortLtoH;
+     cont_SideCross=new Mycontainer<T> (sortside());// cont_sort is a pointer!
+     }
+    return cont_SideCross->data; // return the beg
+}
+
+ // return the end of the iterator
+T* SideCrossOrder_end(){
+    if(cont_SideCross==nullptr){// need to free before
+        //delete cont_sortLtoH;
+    
+     cont_SideCross=new Mycontainer<T> (sortside());// cont_sort is a pointer!
+     }
+    return cont_SideCross->data + cont_SideCross->size; // we add the size to reach the end
+}
+
+
 // return the begin of the iterator
 T* Order_begin(){
     return data;
