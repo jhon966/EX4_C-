@@ -9,7 +9,8 @@ private:
     T* data; // Pointer to the data
     size_t size; // Size of the number of elements in the container
     size_t capacity; // Capacity of the container
-    Mycontainer<T>* cont_sort=nullptr; // container that already sort for the iterator
+    Mycontainer<T>* cont_sorthHtoL=nullptr; // container that already sort hige to low for the iterator
+    Mycontainer<T>* cont_sortLtoH=nullptr; // container that already sort low to hige for the iterator
 public:
 
     // Constructor to initialize the container with a given capacity
@@ -18,7 +19,12 @@ public:
         this->capacity = user_capacity;
         this->data = new T[capacity]; // Allocate memory for the data
     }
-
+// Destructor to free the allocated memory
+    ~Mycontainer() {
+        delete[] data; // Free the allocated memory
+        delete  cont_sorthHtoL;
+        delete  cont_sortLtoH;
+    }
     // copy constuctor 
 Mycontainer(const Mycontainer<T>& other) {
         this->size = other.size; // copy the fields from other...
@@ -79,11 +85,7 @@ sorted.data[r]= sorted.data[i];
 }
 return  sorted;
 }
-    // Destructor to free the allocated memory
-    ~Mycontainer() {
-        delete[] data; // Free the allocated memory
-        delete  cont_sort;
-    }
+    
     // func that add item  T for our container
     void add(const T& item) {
         if (size >= capacity) {
@@ -139,37 +141,38 @@ return  sorted;
     }
 // return the begin of the iterator
 T* AscendingOrder_begin(){ 
-    if(cont_sort!=nullptr){
-        delete cont_sort;
-    }
-     cont_sort=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
-    return cont_sort->data; // return the beg
+    if(cont_sorthHtoL==nullptr){
+        //delete cont_sort;
+     cont_sorthHtoL=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
+     }
+    return cont_sorthHtoL->data; // return the beg
 }
 
  // return the end of the iterator
 T* AscendingOrder_end(){
-    if(cont_sort!=nullptr){// need to free before
-        delete cont_sort;
-    }
-     cont_sort=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
-    return cont_sort->data + cont_sort->size; // we add the size to reach the end
+    if(cont_sorthHtoL==nullptr){// need to free before
+        //delete cont_sort;
+     cont_sorthHtoL=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
+     }
+    return cont_sorthHtoL->data + cont_sorthHtoL->size; // we add the size to reach the end
 }
 // return the begin of the iterator
 T* DescendingOrder_begin(){ 
-    if(cont_sort!=nullptr){// need to free before
-        delete cont_sort;
-    }
-     cont_sort=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
-    return cont_sort->data; // return the beg
+    if(cont_sortLtoH==nullptr){// need to free before
+        //delete cont_sortLtoH;
+     cont_sortLtoH=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
+     }
+    return cont_sortLtoH->data; // return the beg
 }
 
  // return the end of the iterator
 T* DescendingOrder_end(){
-    if(cont_sort!=nullptr){// need to free before
-        delete cont_sort;
-    }
-     cont_sort=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
-    return cont_sort->data + cont_sort->size; // we add the size to reach the end
+    if(cont_sortLtoH==nullptr){// need to free before
+        //delete cont_sortLtoH;
+    
+     cont_sortLtoH=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
+     }
+    return cont_sortLtoH->data + cont_sortLtoH->size; // we add the size to reach the end
 }
 // return the begin of the iterator
 T* Order_begin(){
@@ -178,7 +181,16 @@ T* Order_begin(){
 
 // return the end of the iterator
 T* Order_end(){
-    return data+size;
+    return (data+size);
+}
+
+T* reverse_begin(){
+    return data+size-1;
+}
+
+// return the end of the iterator
+T* reverse_end(){
+    return (data-1);
 }
 };
  //   operator that print the container
