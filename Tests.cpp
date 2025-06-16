@@ -41,11 +41,4 @@ TEST_CASE("MyContainer [size and add check]") {
     CHECK(c.getsize()==1); //size suppose to be 1
 }
 
-TEST_CASE("MyContainer [size and add check]") {
-    Mycontainer<std::string>a; //   new container 
-    a.add("123"); // we will add 3 elemnts 
-    a.add("abc");
-    a.add("def");
-    std::cout<<a;
-}
 

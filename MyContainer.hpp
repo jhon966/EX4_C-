@@ -1,5 +1,4 @@
 #pragma once
-#include <iterator>
 #include <ostream>
 #include <stdexcept>
 #include <iostream>
@@ -10,7 +9,7 @@ private:
     T* data; // Pointer to the data
     size_t size; // Size of the number of elements in the container
     size_t capacity; // Capacity of the container
-
+    Mycontainer<T>* cont_sort=nullptr; // container that already sort for the iterator
 public:
 
     // Constructor to initialize the container with a given capacity
@@ -19,9 +18,71 @@ public:
         this->capacity = user_capacity;
         this->data = new T[capacity]; // Allocate memory for the data
     }
+
+    // copy constuctor 
+Mycontainer(const Mycontainer<T>& other) {
+        this->size = other.size; // copy the fields from other...
+        this->capacity = other.capacity;
+        this->data = new T[capacity]; // Allocate memory for the data
+        for(size_t i =0; i<size ; i++ ){
+            data[i]=other.data[i];
+        }
+    }
+
+    //assignment operator 
+    Mycontainer<T>& operator=(const Mycontainer<T>& other){
+        if(this== &other){ // if this is the object
+            return *this;
+        }
+        delete [] data;
+        this->size = other.size; // copy the fields from other...
+        this->capacity = other.capacity;
+        this->data = new T[capacity]; // Allocate memory for the data
+        for(size_t i =0; i<size ; i++ ){
+            data[i]=other.data[i];
+        }
+        return *this;
+    }
+
+Mycontainer<T> sortHtoL(){
+    Mycontainer<T> sorted(*this);// use deep copy
+    T higest;
+    for(size_t i=0; i<size; i++){
+        higest=sorted.data[i];
+        size_t r=i;// for moves value 
+    for(size_t j=i+1; j<size; j++){// To find the higest value
+        if(sorted.data[j]> higest){ 
+        higest=sorted.data[j];
+        r=j;
+    }
+}
+sorted.data[r]= sorted.data[i];
+    sorted.data[i]=higest;
+}
+return  sorted;
+}
+
+Mycontainer<T> sortLtoH(){
+    Mycontainer<T> sorted(*this);// use deep copy
+    T higest;
+    for(size_t i=0; i<size; i++){
+        higest=sorted.data[i];
+        size_t r=i;// for moves value 
+    for(size_t j=i+1; j<size; j++){// To find the higest value
+        if(sorted.data[j]< higest){ 
+        higest=sorted.data[j];
+        r=j;
+    }
+}
+sorted.data[r]= sorted.data[i];
+    sorted.data[i]=higest;
+}
+return  sorted;
+}
     // Destructor to free the allocated memory
     ~Mycontainer() {
         delete[] data; // Free the allocated memory
+        delete  cont_sort;
     }
     // func that add item  T for our container
     void add(const T& item) {
@@ -76,8 +137,50 @@ public:
     }
     os<< "]"<<std::endl; // Going down a row for more readability
     }
-};
+// return the begin of the iterator
+T* AscendingOrder_begin(){ 
+    if(cont_sort!=nullptr){
+        delete cont_sort;
+    }
+     cont_sort=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
+    return cont_sort->data; // return the beg
+}
 
+ // return the end of the iterator
+T* AscendingOrder_end(){
+    if(cont_sort!=nullptr){// need to free before
+        delete cont_sort;
+    }
+     cont_sort=new Mycontainer<T> (sortLtoH());// cont_sort is a pointer!
+    return cont_sort->data + cont_sort->size; // we add the size to reach the end
+}
+// return the begin of the iterator
+T* DescendingOrder_begin(){ 
+    if(cont_sort!=nullptr){// need to free before
+        delete cont_sort;
+    }
+     cont_sort=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
+    return cont_sort->data; // return the beg
+}
+
+ // return the end of the iterator
+T* DescendingOrder_end(){
+    if(cont_sort!=nullptr){// need to free before
+        delete cont_sort;
+    }
+     cont_sort=new Mycontainer<T> (sortHtoL());// cont_sort is a pointer!
+    return cont_sort->data + cont_sort->size; // we add the size to reach the end
+}
+// return the begin of the iterator
+T* Order_begin(){
+    return data;
+}
+
+// return the end of the iterator
+T* Order_end(){
+    return data+size;
+}
+};
  //   operator that print the container
     template<typename T>
     std::ostream& operator<<(std::ostream& os,const Mycontainer<T>& cont){
