@@ -25,6 +25,7 @@ public:
         delete[] data; // Free the allocated memory
         delete  cont_sorthHtoL;
         delete  cont_sortLtoH;
+        delete  cont_SideCross; // add after the last commit!!!
     }
     // copy constuctor 
 Mycontainer(const Mycontainer<T>& other) {
